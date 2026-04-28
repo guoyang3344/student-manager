@@ -1,0 +1,82 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #app {
+  width: 100%;
+  height: 100%;
+}
+
+.el-table {
+  .el-table__cell {
+    padding: 12px 0;
+  }
+}
+
+.el-dialog {
+  .el-dialog__header {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+  }
+  .el-dialog__body {
+    padding: 20px;
+  }
+  .el-dialog__footer {
+    padding: 16px 20px;
+    border-top: 1px solid #eee;
+  }
+}
+
+.el-form {
+  .el-form-item {
+    margin-bottom: 18px;
+  }
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 0;
+}
+
+.search-container {
+  padding: 20px;
+  background: #fff;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+
+.table-container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 4px;
+}
+
+.operation-btn {
+  margin-right: 8px;
+}
+
+.status-tag {
+  &.status-active {
+    background-color: #e6f7ff;
+    border-color: #91d5ff;
+    color: #1890ff;
+  }
+  &.status-inactive {
+    background-color: #fff7e6;
+    border-color: #ffd591;
+    color: #fa8c16;
+  }
+  &.status-error {
+    background-color: #fff2f0;
+    border-color: #ffccc7;
+    color: #ff4d4f;
+  }
+  &.status-success {
+    background-color: #f6ffed;
+    border-color: #b7eb8f;
+    color: #52c41a;
+  }
+}
