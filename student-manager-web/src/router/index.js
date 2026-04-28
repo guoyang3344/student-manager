@@ -54,6 +54,12 @@ const routes = [
         name: 'Checkin',
         component: () => import('@/views/checkin/index.vue'),
         meta: { title: '入住记录查询', icon: 'Document' }
+      },
+      {
+        path: 'repair',
+        name: 'Repair',
+        component: () => import('@/views/repair/index.vue'),
+        meta: { title: '报修管理', icon: 'Tools' }
       }
     ]
   }

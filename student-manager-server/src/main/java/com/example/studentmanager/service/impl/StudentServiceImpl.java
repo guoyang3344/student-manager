@@ -66,6 +66,13 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     }
 
     @Override
+    public Student getByUserId(Long userId) {
+        return getOne(new LambdaQueryWrapper<Student>()
+                .eq(Student::getUserId, userId)
+                .eq(Student::getDeleted, 0));
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean saveStudent(Student student) {
         Student existStudent = getByStudentNo(student.getStudentNo());
