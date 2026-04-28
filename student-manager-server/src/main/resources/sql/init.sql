@@ -87,6 +87,7 @@ CREATE TABLE IF NOT EXISTS dormitory (
 -- 学生表
 CREATE TABLE IF NOT EXISTS student (
     id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
+    user_id BIGINT COMMENT '关联的用户ID（用于学生登录系统）',
     student_no VARCHAR(20) NOT NULL COMMENT '学号',
     name VARCHAR(50) NOT NULL COMMENT '姓名',
     gender INT DEFAULT 1 COMMENT '性别：1男 2女',
@@ -105,9 +106,11 @@ CREATE TABLE IF NOT EXISTS student (
     update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0未删除 1已删除',
     UNIQUE KEY uk_student_no (student_no),
+    UNIQUE KEY uk_user_id (user_id),
     INDEX idx_name (name),
     INDEX idx_department (department),
-    INDEX idx_status (status)
+    INDEX idx_status (status),
+    FOREIGN KEY (user_id) REFERENCES sys_user(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='学生表';
 
 -- 入住记录表
@@ -133,6 +136,37 @@ CREATE TABLE IF NOT EXISTS checkin_record (
     FOREIGN KEY (dormitory_id) REFERENCES dormitory(id) ON DELETE CASCADE,
     FOREIGN KEY (building_id) REFERENCES dormitory_building(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='入住记录表';
+
+-- 报修表
+CREATE TABLE IF NOT EXISTS repair (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
+    student_id BIGINT COMMENT '学生ID',
+    user_id BIGINT COMMENT '用户ID（报修人）',
+    dormitory_id BIGINT NOT NULL COMMENT '宿舍ID',
+    building_id BIGINT NOT NULL COMMENT '宿舍楼ID',
+    repair_type INT DEFAULT 1 COMMENT '报修类型：1水电维修 2家具维修 3网络问题 4其他',
+    title VARCHAR(100) COMMENT '报修标题',
+    description VARCHAR(500) COMMENT '报修描述',
+    image_urls VARCHAR(500) COMMENT '报修图片URL（多个用逗号分隔）',
+    status INT DEFAULT 1 COMMENT '状态：1待处理 2处理中 3已完成 4已关闭',
+    handler_id BIGINT COMMENT '处理人ID',
+    handle_remark VARCHAR(500) COMMENT '处理备注',
+    handle_time DATETIME COMMENT '处理时间',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0未删除 1已删除',
+    INDEX idx_student_id (student_id),
+    INDEX idx_user_id (user_id),
+    INDEX idx_dormitory_id (dormitory_id),
+    INDEX idx_building_id (building_id),
+    INDEX idx_status (status),
+    INDEX idx_repair_type (repair_type),
+    FOREIGN KEY (student_id) REFERENCES student(id) ON DELETE SET NULL,
+    FOREIGN KEY (user_id) REFERENCES sys_user(id) ON DELETE SET NULL,
+    FOREIGN KEY (dormitory_id) REFERENCES dormitory(id) ON DELETE CASCADE,
+    FOREIGN KEY (building_id) REFERENCES dormitory_building(id) ON DELETE CASCADE,
+    FOREIGN KEY (handler_id) REFERENCES sys_user(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='报修表';
 
 -- 初始化角色数据
 INSERT INTO sys_role (role_name, role_code, description, status) VALUES

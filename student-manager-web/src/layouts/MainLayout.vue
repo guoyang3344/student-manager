@@ -58,6 +58,11 @@
           <el-icon><Document /></el-icon>
           <template #title>入住记录查询</template>
         </el-menu-item>
+        
+        <el-menu-item index="/repair">
+          <el-icon><Tools /></el-icon>
+          <template #title>报修管理</template>
+        </el-menu-item>
       </el-menu>
     </el-aside>
     

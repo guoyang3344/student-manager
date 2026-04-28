@@ -4,47 +4,40 @@ import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("student")
-public class Student implements Serializable {
+@TableName("repair")
+public class Repair implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @TableId(type = IdType.AUTO)
     private Long id;
 
+    private Long studentId;
+
     private Long userId;
 
-    private String studentNo;
+    private Long dormitoryId;
 
-    private String name;
+    private Long buildingId;
 
-    private Integer gender;
+    private Integer repairType;
 
-    private LocalDate birthday;
+    private String title;
 
-    private String idCard;
+    private String description;
 
-    private String phone;
-
-    private String email;
-
-    private String department;
-
-    private String major;
-
-    private String className;
-
-    private Integer grade;
-
-    private String address;
-
-    private String avatar;
+    private String imageUrls;
 
     private Integer status;
+
+    private Long handlerId;
+
+    private String handleRemark;
+
+    private LocalDateTime handleTime;
 
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
@@ -56,11 +49,17 @@ public class Student implements Serializable {
     private Integer deleted;
 
     @TableField(exist = false)
-    private String dormitoryRoomNumber;
+    private String studentNo;
+
+    @TableField(exist = false)
+    private String studentName;
 
     @TableField(exist = false)
     private String buildingName;
 
     @TableField(exist = false)
-    private Integer checkinStatus;
+    private String roomNumber;
+
+    @TableField(exist = false)
+    private String handlerName;
 }

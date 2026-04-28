@@ -29,6 +29,8 @@ public class User implements Serializable {
 
     private Integer status;
 
+    private Integer loginStatus;
+
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 

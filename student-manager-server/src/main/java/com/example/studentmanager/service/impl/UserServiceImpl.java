@@ -5,11 +5,15 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.studentmanager.common.PageResult;
+import com.example.studentmanager.entity.CheckinRecord;
+import com.example.studentmanager.entity.Student;
 import com.example.studentmanager.entity.User;
 import com.example.studentmanager.entity.UserRole;
 import com.example.studentmanager.exception.BusinessException;
 import com.example.studentmanager.mapper.UserMapper;
 import com.example.studentmanager.mapper.UserRoleMapper;
+import com.example.studentmanager.service.CheckinRecordService;
+import com.example.studentmanager.service.StudentService;
 import com.example.studentmanager.service.UserService;
 import com.example.studentmanager.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +31,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired
+    private StudentService studentService;
+
+    @Autowired
+    private CheckinRecordService checkinRecordService;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -161,10 +171,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (user.getStatus() == 0) {
             throw new BusinessException("用户已被禁用，请联系管理员");
         }
+        if (user.getLoginStatus() != null && user.getLoginStatus() == 0) {
+            throw new BusinessException("您的账号已被禁止登录，请联系管理员");
+        }
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BusinessException("用户名或密码错误");
         }
+        
+        checkStudentCheckinStatus(user);
+        
         return jwtUtil.generateToken(user.getId(), user.getUsername());
+    }
+    
+    private void checkStudentCheckinStatus(User user) {
+        Student student = studentService.getByUserId(user.getId());
+        if (student != null) {
+            CheckinRecord activeCheckin = checkinRecordService.getActiveByStudentId(student.getId());
+            if (activeCheckin == null) {
+                throw new BusinessException("您没有有效的入住记录，无法登录系统。请先办理入住手续。");
+            }
+        }
     }
 
     @Override

@@ -15,6 +15,8 @@ public interface StudentService extends IService<Student> {
 
     Student getByStudentNo(String studentNo);
 
+    Student getByUserId(Long userId);
+
     boolean saveStudent(Student student);
 
     boolean updateStudent(Student student);
